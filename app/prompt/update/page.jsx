@@ -6,7 +6,7 @@ import { Suspense } from "react";
 
 import Form from "@components/Form";
 
-const UpdatePrompt = () => {
+const UpdatedPrompt = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const promptId = searchParams.get("id");
@@ -54,14 +54,20 @@ const UpdatePrompt = () => {
   };
 
   return (
+    <Form
+      type="Edit"
+      prompt={prompt}
+      setPrompt={setPrompt}
+      submitting={submitting}
+      handleSubmit={updatePrompt}
+    />
+  );
+};
+
+const UpdatePrompt = () => {
+  return (
     <Suspense>
-      <Form
-        type="Edit"
-        prompt={prompt}
-        setPrompt={setPrompt}
-        submitting={submitting}
-        handleSubmit={updatePrompt}
-      />
+      <UpdatedPrompt />
     </Suspense>
   );
 };
