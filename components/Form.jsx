@@ -45,8 +45,11 @@ const Form = ({ type, prompt, setPrompt, handleSubmit, submitting }) => {
           />
         </label>
 
-        <div className="flex justify-end mx-3 mb-5 gap-4">
-          <Link href="/" className="text-sm text-gray-500">
+        <div className="flex justify-end items-center mx-3 mb-5 gap-4">
+          <Link
+            href="/"
+            className="px-5 py-1.5 text-sm bg-white rounded-full text-gray-500"
+          >
             Cancel
           </Link>
 
