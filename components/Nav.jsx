@@ -14,8 +14,6 @@ const Nav = () => {
     (async () => {
       const res = await getProviders();
       setProviders(res);
-      console.log(res);
-      console.log(providers);
     })();
   }, []);
 
@@ -53,19 +51,14 @@ const Nav = () => {
             </Link>
           </div>
         ) : (
-          <>
-            {providers &&
-              Object.values(providers).map((provider) => (
-                <button
-                  type="button"
-                  key={provider.name}
-                  onClick={() => signIn(provider.id)}
-                  className="black_btn"
-                >
-                  Sign In with {provider.name}
-                </button>
-              ))}
-          </>
+          <div className="flex flex-row gap-2">
+            <Link href="/login" className="black_btn">
+              Login
+            </Link>
+            <Link href="/register" className="black_btn">
+              Register
+            </Link>
+          </div>
         )}
       </div>
 
@@ -111,19 +104,14 @@ const Nav = () => {
             )}
           </div>
         ) : (
-          <>
-            {providers &&
-              Object.values(providers).map((provider) => (
-                <button
-                  type="button"
-                  key={provider.name}
-                  onClick={() => signIn(provider.id)}
-                  className="black_btn"
-                >
-                  Sign In
-                </button>
-              ))}
-          </>
+          <div className="flex flex-row gap-2">
+            <Link href="/login" className="black_btn">
+              Login
+            </Link>
+            <Link href="/register" className="black_btn">
+              Register
+            </Link>
+          </div>
         )}
       </div>
     </nav>
