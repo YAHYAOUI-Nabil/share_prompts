@@ -1,7 +1,7 @@
 import { createTransport } from "nodemailer";
 
-async function sendVerificationRequest(params) {
-  const { identifier, url, provider, theme } = params;
+export async function sendVerificationRequest(params) {
+  const { identifier, url, provider } = params;
   const { host } = new URL(url);
   // NOTE: You are not required to use `nodemailer`, use whatever you want.
   const transport = createTransport(provider.server);
@@ -10,7 +10,7 @@ async function sendVerificationRequest(params) {
     from: provider.from,
     subject: `Sign in to ${host}`,
     text: text({ url, host }),
-    html: html({ url, host, theme }),
+    html: html({ url, host }),
   });
   const failed = result.rejected.concat(result.pending).filter(Boolean);
   if (failed.length) {
@@ -27,18 +27,18 @@ async function sendVerificationRequest(params) {
  * @note We don't add the email address to avoid needing to escape it, if you do, remember to sanitize it!
  */
 function html(params) {
-  const { url, host, theme } = params;
+  const { url, host } = params;
 
   const escapedHost = host.replace(/\./g, "&#8203;.");
 
-  const brandColor = theme.brandColor || "#346df1";
+  const brandColor = "#346df1";
   const color = {
     background: "#f9f9f9",
     text: "#444",
     mainBackground: "#fff",
     buttonBackground: brandColor,
     buttonBorder: brandColor,
-    buttonText: theme.buttonText || "#fff",
+    buttonText: "#fff",
   };
 
   return `

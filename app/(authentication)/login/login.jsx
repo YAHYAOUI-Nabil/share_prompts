@@ -1,24 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub, FaFacebook } from "react-icons/fa";
 
 const Login = () => {
   const { data: session } = useSession();
-  const [providers, setProviders] = useState(null);
   const [userInfo, setUserInfo] = useState({ username: "", password: "" });
   const [userEmail, setUserEmail] = useState({ email: "" });
-
-  useEffect(() => {
-    (async () => {
-      const res = await getProviders();
-      setProviders(res);
-      console.log(res);
-    })();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,10 +72,10 @@ const Login = () => {
         </form>
       </div>
 
-      <div class="relative flex py-5 items-center">
-        <div class="flex-grow border-t border-gray-400"></div>
-        <span class="flex-shrink mx-4 text-gray-400">Or</span>
-        <div class="flex-grow border-t border-gray-400"></div>
+      <div className="relative flex py-5 items-center">
+        <div className="flex-grow border-t border-gray-400"></div>
+        <span className="flex-shrink mx-4 text-gray-400">Or</span>
+        <div className="flex-grow border-t border-gray-400"></div>
       </div>
 
       <div className="flex flex-col">
@@ -115,10 +105,10 @@ const Login = () => {
         </form>
       </div>
 
-      <div class="relative flex py-5 items-center">
-        <div class="flex-grow border-t border-gray-400"></div>
-        <span class="flex-shrink mx-4 text-gray-400">Or</span>
-        <div class="flex-grow border-t border-gray-400"></div>
+      <div className="relative flex py-5 items-center">
+        <div className="flex-grow border-t border-gray-400"></div>
+        <span className="flex-shrink mx-4 text-gray-400">Or</span>
+        <div className="flex-grow border-t border-gray-400"></div>
       </div>
 
       <div className="flex flex-col gap-4">

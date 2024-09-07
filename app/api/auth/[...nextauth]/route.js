@@ -8,9 +8,11 @@ import EmailProvider from "next-auth/providers/email";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 
 import { connectToDB } from "@utils/database";
+import client from "@lib/db";
+import { sendVerificationRequest } from "@utils/sendVerificationRequest";
 
 const handler = NextAuth({
-  adapter: MongoDBAdapter(process.env.MONGODB_URI),
+  adapter: MongoDBAdapter(client),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -26,6 +28,7 @@ const handler = NextAuth({
     }),
     EmailProvider({
       server: {
+        service: "gmail",
         host: process.env.EMAIL_SERVER_HOST,
         port: process.env.EMAIL_SERVER_PORT,
         auth: {
@@ -34,13 +37,22 @@ const handler = NextAuth({
         },
       },
       from: process.env.EMAIL_FROM,
-      sendVerificationRequest({
-        identifier: email,
-        url,
-        provider: { server, from },
-      }) {
-        /* your function */
-      },
+      sendVerificationRequest: sendVerificationRequest({
+        identifier: process.env.EMAIL_FROM,
+        url: "http://localhost:3000",
+        provider: {
+          server: {
+            service: "gmail",
+            host: process.env.EMAIL_SERVER_HOST,
+            port: process.env.EMAIL_SERVER_PORT,
+            auth: {
+              user: process.env.EMAIL_SERVER_USER,
+              pass: process.env.EMAIL_SERVER_PASSWORD,
+            },
+          },
+          from: process.env.EMAIL_FROM,
+        },
+      }),
     }),
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
@@ -50,11 +62,12 @@ const handler = NextAuth({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
-      // credentials: {
-      //   username: { label: "Username", type: "text" },
-      //   password: { label: "Password", type: "password" },
-      // },
+      credentials: {
+        username: { label: "Username", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
       async authorize(credentials, req) {
+        console.log("credentials");
         await connectToDB();
         console.log(credentials);
         // Add logic here to look up the user from the credentials supplied
@@ -77,6 +90,7 @@ const handler = NextAuth({
 
   callbacks: {
     async session({ session }) {
+      console.log("session");
       const sessionUser = await User.findOne({ email: session.user.email });
 
       session.user.id = sessionUser._id.toString();
@@ -85,7 +99,7 @@ const handler = NextAuth({
     },
     async signIn({ account, profile, user, credentials }) {
       try {
-        console.log(credentials);
+        console.log("sign in");
         await connectToDB();
 
         const userIsExist = await User.findOne({ email: profile.email });
